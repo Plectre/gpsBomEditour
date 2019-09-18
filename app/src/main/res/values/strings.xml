@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">Service Bom_Editour</string>
+    <string name="by_plectre">by Plectre</string>
+    <string name="version">2.2.3</string>
+    <string name="circuit">Type de circuit</string>
+    <string name="btn_save">SAUVGARDER</string>
+    <string name="status_gps">Position en cours d\'acquisition, Merci de patienter</string>
+    <string name="demarrer_service">Demarrer Service</string>
+    <string name="recherche_position">Synchroniser position</string>
+    <string name="btn_annuler">CANCEL</string>
+    <string name="haut_le_pieds">HLP</string>
+    <string name="uni_lateral_droit">ULD</string>
+    <string name="bi_lateral">BL</string>
+    <string name="marche_arriere">MA</string>
+    <string name="init_status_gps">BOM GPS</string>
+    <string name="tirets">---</string>
+    <string name="stop">Stop</string>
+    <string name="record">Rec</string>
+    <string name="km_h">Km/h</string>
+    <string name="zero">00</string>
+    <string name="concat_km_h">%d km/h</string>
+    <string name="hyper_urbain">Hyper Urbain</string>
+    <string name="urbain">Urbain</string>
+    <string name="rural">Rural</string>
+    <string name="hyper_rural">Hyper Rural</string>
+    <string name="delta_seconde">Temps seconde</string>
+    <string name="readyToRecording">! . Pret pour l\'enregistrement . !</string>
+    <string name="recording">.. Enregistrement ..</string>
+    <string name ="annuler">ANNULER</string>
+    <string name="alert_message">Suivi de collecte terminé ?</string>
+    <string name="alert_title">Arrêter le suivi</string>
+    <string name="no">NON</string>
+    <string name="yes">OUI</string>
+    <string name="precision">- Precision -</string>
+    <string name="cap">- Cap -</string>
+    <string name="poi">poi</string>
+</resources>

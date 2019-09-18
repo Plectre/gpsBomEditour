@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item>
+        <shape>
+            <size
+                android:height="20dp"
+                android:width="20dp"/>
+            <corners android:radius="100dp"/>
+            <stroke android:width="4dp"/>
+            <stroke android:color="@color/colorPrimaryDark"/>
+            <padding android:left="0dp"/>
+            <padding android:top="0dp"/>
+            <gradient
+                    android:centerColor="@color/colorAccent"
+                    android:endColor="@color/colorAccent">
+            </gradient>
+        </shape>
+    </item>
+    <item android:drawable="@color/colorButton" />
+    </layer-list>
