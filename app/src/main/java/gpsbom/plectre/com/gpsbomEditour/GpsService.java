@@ -27,25 +27,27 @@ import gpsbom.plectre.com.gpsbomEditour.utils.Cap;
 
 public class GpsService extends Service {
 
+
     private LocationManager locationMgr = null;
-
     private Boolean firstCoorInbound = true;
-
+    private int tic;
+    private int delay = 5;
+    private boolean isDelayOk = false;
     private int vitesseDeCollecte;
-
-
     private double latitude;
     private double longitude;
     private float bearing;
     private float accuracy;
-
     private String isCoordOK = "Position en cours !";
+
+    private Intent intent;
 
     private Boolean isFirstime = false; // boolean qui verifie si le toast dispo à etait affiché
 
     public String getIscoorOk() {
         return isCoordOK;
     }
+    private Cap cap = new Cap();
 
     /**
      * Intent se chargeant d'envoyer à MainActivity
@@ -68,21 +70,49 @@ public class GpsService extends Service {
         firstCoorInbound = false;
     }
 
+    private void putIntent() {
+        //Intent intent = new Intent(getApplicationContext(), MyReciever.class);
+
+        intent.setAction("com.bom.service");
+        intent.putExtra("isDelayOk", isDelayOk);
+        //intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+        String str_lat = String.valueOf(latitude);
+        String str_lon = String.valueOf(longitude);
+        String str_accuracy = String.valueOf(Math.round(accuracy));
+        // Appel methode pour formatage du cap pour affichage...
+
+        String st_bearing = cap.formatBearing(bearing);
+        intent.putExtra("lat", str_lat);                    // Latitude
+        intent.putExtra("lon", str_lon);                    // longitude
+        intent.putExtra("accuracy", str_accuracy);          // Précision
+        intent.putExtra("str_bearing", st_bearing);         // Cap pour affichage
+        intent.putExtra("float_bearing", bearing);          // Cap
+        Log.e("GpsService_st_bearing", st_bearing);
+        //Log.e("GpsService_precision", str_accuracy);
+        sendBroadcast(intent);
+
+    }
 
     private LocationListener onLocationChange = new LocationListener() {
+
 
         @Override
         public void onLocationChanged(Location location) {
             // Get datas from GPS device
-
             latitude = location.getLatitude();
             longitude = location.getLongitude();
             bearing = location.getBearing();
             accuracy = location.getAccuracy();
             Log.e("Bearing", ":" + bearing);
-            int intAccuracy = (int) accuracy;
-
-
+            tic++;
+            Log.i("TIC", String.valueOf(tic));
+            // decompte par secondes
+            if (tic >= delay ) {
+                isDelayOk = true;
+                tic = 0;
+            } else {
+                isDelayOk = false;
+            }
             //int intBearing = (int) bearing;
             // A la premiere aquisition de la position
             // Appel de la méthode intentStatusPosition
@@ -91,37 +121,8 @@ public class GpsService extends Service {
                 intentStatusPosition();
             }
 
+            putIntent();
 
-            /** Envoyer les données aux classe abonnées (MyReciever.class) par l'intermediare
-             *   d'un Broadcast
-             * Envoyer les données avec un put StringExtra à l'activitée principale afin de renseigner les TextView
-             * txt_lat et txt_lon
-             */
-
-            Intent intent = new Intent(getApplicationContext(), MyReciever.class);
-            intent.setAction("com.bom.service");
-            //intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            String str_lat = String.valueOf(latitude);
-            String str_lon = String.valueOf(longitude);
-            String str_accuracy = String.valueOf(intAccuracy);
-            // Appel methode pour formatage du cap pour affichage...
-            Cap cap = new Cap();
-            String st_bearing = cap.formatBearing(bearing);
-            intent.putExtra("lat", str_lat);                    // Latitude
-            intent.putExtra("lon", str_lon);                    // longitude
-            intent.putExtra("accuracy", str_accuracy);          // Précision
-            intent.putExtra("str_bearing", st_bearing);         // Cap pour affichage
-            intent.putExtra("float_bearing", bearing);          // Cap
-            Log.e("GpsService_st_bearing", st_bearing);
-            //Log.e("GpsService_precision", str_accuracy);
-            sendBroadcast(intent);
-        }
-
-        // Methode appelée par onLocationChanged si le step entre deux points et depassé
-        private void sendToSave(String typeDeCollecte) {
-            KmlFactory kmlFactory = new KmlFactory();
-            //kmlFactory.setKml(typeDeCollecte, String.valueOf(latitude), String.valueOf(longitude));
-            kmlFactory.setKml(typeDeCollecte);
         }
 
         @Override
@@ -160,6 +161,7 @@ public class GpsService extends Service {
 
     @Override
     public void onCreate() {
+        intent = new Intent(getApplicationContext(), MyReciever.class);
         super.onCreate();
     }
 
@@ -185,11 +187,11 @@ public class GpsService extends Service {
                 seekBarProgress = 25;
             }
 
-            vitesseDeCollecte = Math.round(seekBarProgress);
-            seekBarProgress = vitesseDeCollecte * 200;
-            vitesseDeCollecte *= 3.5;
+            delay = Math.round(seekBarProgress);
 
-            abonementGps((long) seekBarProgress, vitesseDeCollecte);
+
+            abonementGps((long) delay, 100);
+            Log.i("DELAY", "+ "+ delay);
         }
         return super.onStartCommand(intent, flags, startId);
     }
@@ -200,7 +202,7 @@ public class GpsService extends Service {
         return null;
     }
 
-    public void abonementGps(long time, float distanceMetre) {
+    public void abonementGps(long delta, float distanceMetre) {
 
         locationMgr = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         // gestion des permissions utilisateur
@@ -216,10 +218,10 @@ public class GpsService extends Service {
         * Calcul du temps entre chaque récupération des points (seekBar * 30)
          */
         //int maxTimeToPlot = (int) (seekBarProgress * 30);
-        Log.i("GPS service", "time " + time);
+        Log.i("GPS service", "delta " + delta);
         Log.i("APP", "distanceMetre " + distanceMetre);
         //requestLocationUpdates(String provider, long minTime, float mniDistance, Locationlistener listener)
-        locationMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, time,
-                distanceMetre, onLocationChange);
+        locationMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000,
+                0, onLocationChange);
     }
 }

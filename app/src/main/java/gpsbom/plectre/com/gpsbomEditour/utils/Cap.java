@@ -12,12 +12,8 @@ public class Cap {
     public Cap(float currentCap) {
         this.currentCap = currentCap;
     }
-
-    public Cap() {
-    }
-
+    public Cap(){}
     public boolean delta() {
-
         if (currentCap != oldCap) {
             isCapChange = true;
             oldCap = currentCap;

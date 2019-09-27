@@ -1,5 +1,9 @@
 package gpsbom.plectre.com.gpsbomEditour.saves;
 
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+import android.util.Log;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -12,7 +16,8 @@ import gpsbom.plectre.com.gpsbomEditour.MainActivity;
  * et appellé par MyReciever
  **/
 
-public class SaveCoordinates extends MainActivity {
+@RequiresApi(api = Build.VERSION_CODES.KITKAT)
+public class SaveCoordinates {
 
     private String fName;
     private String path;
@@ -28,7 +33,7 @@ public class SaveCoordinates extends MainActivity {
     }
 
     public void saveCoor(String pLat, String pLon) {
-
+        Log.i("saveCoordinates", pLon + ":" + pLat);
         this.saveLat = pLat;
         this.saveLon = pLon;
 

@@ -1,5 +1,6 @@
 package gpsbom.plectre.com.gpsbomEditour;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
@@ -66,13 +67,11 @@ public class LauncherActivity extends AppCompatActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    seekBar.setMin(25);
-                    seekBar.setMax(50);
+                    seekBar.setMin(5);
+                    seekBar.setMax(15);
                 } else {
 
-                    seekBar.setMax(50);
-                    seekBar.setMin(25);
-
+                    seekBar.setMin(5);
                 }
                 updateLocation = (float) progress;
                 // Récupération de la string formatée dans R.string
@@ -204,12 +203,15 @@ public class LauncherActivity extends AppCompatActivity {
     }
 
     public void typeDeCircuit(int i) {
-        if (i >= 25 && i <= 35) {
-            txt_location.setText(R.string.hyper_urbain);
-        } else if (i > 35 && i <= 45) {
+
+        txt_location.setText(String.valueOf(i));
+    }
+       /* if (i >= 5 && i <= 8) {
+            txt_location.setText(String.valueOf(i));
+        } else if (i > 8 && i <= 11) {
             txt_location.setText(R.string.urbain);
-        } else if (i > 45) {
+        } else if (i > 11) {
             txt_location.setText(R.string.rural);
         }
-    }
+    }*/
 }

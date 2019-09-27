@@ -44,8 +44,10 @@ public class MainActivity extends AppCompatActivity {
     public static String lat;
     public static String lon;
     public static boolean recIsOn = false;
+    public static boolean isRadioButtonEnable = false;
     public static String typeCollectte = "HLP";
     private Animation fadeAnim;
+    private Animation blinkAnim;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
         btn_noir = (Button) findViewById(R.id.btn_point_noir);
 
         fadeAnim = AnimationUtils.loadAnimation(MainActivity.this, R.anim.anim);
+        blinkAnim = AnimationUtils.loadAnimation(MainActivity.this, R.anim.blink);
 
         AfficheGpsStatus(gpsStatus);
         onRadioGroupChange();
@@ -107,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
         // Recuperation de l'Intent envoyé par gpsService
         Intent intent = getIntent();
         if (intent != null) {
+
             lat = intent.getStringExtra("lati");
             lon = intent.getStringExtra("longi");
             String str_accuracy = intent.getStringExtra("accuracy");
@@ -137,6 +141,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
                 vibrator(25);
+                int check = rd_group.getCheckedRadioButtonId();
+                if(check != -1) isRadioButtonEnable = true;
                 switch (checkedId) {
 
                     case R.id.radio_biLat:
@@ -214,7 +220,6 @@ public class MainActivity extends AppCompatActivity {
     public void setLat(String pLat, String pLon, String accuracy, String bearing) {
         this.lat = pLat;
         this.lon = pLon;
-
         txt_lon.setText(lon + "°");
         txt_lat.setText(lat + "°");
         if (accuracy!= null) {
@@ -223,12 +228,10 @@ public class MainActivity extends AppCompatActivity {
         if (bearing != null) {
             txt_bearing.setText("Cap: " + bearing);
         }
-
     }
 
     public void AfficheGpsStatus(String pGpsStatus) {
         txt_status_gps.setText(pGpsStatus);
-        //txt_plot.setText(R.string.recording);
         if (recIsOn) {
             txt_plot.setText(R.string.recording);
         } else {
